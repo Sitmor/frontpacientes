@@ -14,15 +14,16 @@ export default function Registro(){
     event.preventDefault();
 
     const client = new ApolloClient({
-    uri: 'http://localhost:8080/',
+    uri: 'http://localhost:8080/graphql',
     cache: new InMemoryCache(),
+    connectToDevTools: true,
     });
 
     client
       .query({
         query: gql`
-          query GetMedicos {
-            Medicos {
+          query QUERY {
+            getMedicos {
               rut
               nombre
               especialidad
