@@ -1,11 +1,39 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
 
 export default function Login(){  
   const navigate = useNavigate();
 
-  function handleLogin(){
-    console.log("")
-  }
+  const [formData, setFormData] = useState({rut: "", contrasena:""});
+
+  const handleChange = (event:any) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  function HandleSubmit(event: any){
+    event.preventDefault();
+
+    const client = new ApolloClient({
+    uri: 'http://localhost:8080/graphql',
+    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    });
+
+    client
+      .query({
+        query: gql`
+          query QUERY {
+            login {
+              rut
+              contrasena
+            }
+          }
+        `,
+      })
+      .then((result) => console.log(result));
+  };
 
   return(
   <div>
@@ -60,7 +88,7 @@ export default function Login(){
           <p className="text-muted">Ingrese sus credenciales para continuar</p>
         </div>
         {/* Formulario */}
-        <form id="loginForm">
+        <form id="loginForm" onSubmit={HandleSubmit}>
           {/* Campo de Rut */}
           <label htmlFor="Rut">RUT</label>
           <br />
